@@ -4,3 +4,4 @@
 .cs_files
 .notifier
 /.undodir/
+.gdb_history
