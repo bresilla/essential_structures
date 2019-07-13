@@ -1,24 +1,45 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include "dll.h"
 
-
 LinkedList::LinkedList(){
-    first=NULL;
-};
+    first=new Node;
+    first->point=NULL;
+    first->next=NULL;
+    first->prev=NULL;
+    last=first;
+}
 
 LinkedList::LinkedList(int A[], int x){
-    Node *last, *current;
+    Node *current;
     first=new Node;
-    first->data=A[0];
+    first->point=&A[0];
     first->next=NULL;
     first->prev=NULL;
     last=first;
 
     for (int i = 1; i < x; ++i){
         current=new Node;
-        current->data=A[i];
+        current->point=&A[i];
+        current->next=NULL;
+        last->next=current;
+        current->prev=last;
+        last=current;
+    }
+}
+
+LinkedList::LinkedList(int x){
+    Node *current;
+    first=new Node;
+    first->point=&x;
+    first->next=NULL;
+    first->prev=NULL;
+    last=first;
+
+    for (int i = 1; i < x; ++i){
+        current=new Node;
+        current->point=NULL;
         current->next=NULL;
         last->next=current;
         current->prev=last;
@@ -35,49 +56,95 @@ LinkedList::~LinkedList(){
     }
 }
 
+Node LinkedList::Head(){
+    // return (long)(int *)first;
+    return *first;
+}
+
+Node LinkedList::Tail(){
+    // return (long)(int*)last;
+    return *last;
+}
+
 int LinkedList::Length(){
     Node *p = first;
     int size=0;
-    while(p){
+    while(p != NULL && p != last){
         p=p->next;
         size++;
     }
     return size;
 }
 
-void LinkedList::Display(){
-    Node *p = first;
-    printf("\n(%d) >> ", Length());
-    while(p){
-        printf("%d ", p->data);
-        p=p->next;
+void LinkedList::Append(int A[], int x){
+    Node *current;
+    first->point=&A[0];
+    first->next=NULL;
+    first->prev=NULL;
+    last=first;
+    for (int i = 1; i < x; ++i){
+        current=new Node;
+        current->point=&A[i];
+        current->next=NULL;
+        last->next=current;
+        current->prev=last;
+        last=current;
     }
 }
 
-void LinkedList::DisplayAddress(){
+void LinkedList::Nodes(Node *p){
+    printf("\n%p ", p->prev);
+    printf(" %p ", p);
+    printf(" %p", p->next);
+}
+
+void LinkedList::Display(){
+    if (first->point == NULL){
+        return;
+    }
     Node *p = first;
-    printf("\n");
+    printf("\n(%d) >> ", Length());
+    while(p){
+        printf("%d ", *p->point);
+        p=p->next;
+    }
+    printf("\n----------\n");
+}
+
+void LinkedList::Points(){
+    Node *p = first;
+    printf("\n(%d) >> ", Length());
+    while(p){
+        printf("%p ", p->point);
+        p=p->next;
+    }
+    printf("\n----------\n");
+}
+
+
+void LinkedList::Address(){
+    Node *p = first;
     while(p){
         printf("%p  ", p->prev);
         printf("%p  ", p);
         printf("%p\n", p->next);
         p=p->next;
     }
+    printf("----------\n");
 }
 
-
-int LinkedList::Get(int index){
+Node* LinkedList::Get(int index){
     if (index < 0 || index > Length()) {
-        return -1;
+        return NULL;
     }
     Node *p = first;
     for (int i = 0; i < index; ++i) {
         p = p->next;
     }
-    return p->data;
+    return p;
 }
 
-void LinkedList::Set(int index, int val){
+void LinkedList::Set(int index, int *val){
     if (index < 0 || index > Length()) {
         return;
     }
@@ -85,44 +152,36 @@ void LinkedList::Set(int index, int val){
     for (int i = 0; i < index; ++i) {
         p = p->next;
     }
-    p->data=val;
+    p->point = val;
 }
 
-void swap(Node *p, Node *q){
-    Node *t = new Node{NULL,0,NULL};
-    t->data = p->data;
-    p->data = q->data;
-    q->data = t->data;
-    delete t;
-}
-
-void LinkedList::Swap(int index1, int index2){
-    int x, i, j;
-    if (index1>index2) {
-        x = index1;
-        index1 = index2;
-        index2 = x;
-    }
-    if (index2-index1==0) {
+void LinkedList::Swap(Node *p, Node *q){
+    if (!p || !q) {
         return;
     }
-    Node *p = first, *q=first;
-    for (i = 0; i < index1; ++i) {
-        p = p->next;
-    }
-    q=p;
-    for (j = i; j < index2; ++j) {
-        q = q->next;
-    }
-    swap(p,q);
+    Node *t;
+    t = p->next;
+    p->next = q->next;
+    q->next = t;
+    if (p->next != NULL)
+        p->next->prev = p;
+    if (q->next != NULL)
+        q->next->prev = q;
+    t = p->prev;
+    p->prev = q->prev;
+    q->prev = t;
+    if (p->prev != NULL)
+        p->prev->next = p;
+    if (q->prev != NULL)
+        q->prev->next = q;
 }
 
 void LinkedList::Sort(){
     Node *p = first;
-    int length = Length();
-    for (int i = 0; i < length-1; ++i) {
-        if (p->data > p->next->data) {
-            swap(p,p->next);
+    int length = Length(), i;
+    for (i = 0; i < length-1; ++i) {
+        if (*p->point > *p->next->point) {
+                Swap(p,p->next);
             p = first;
             i = 0;
         }
@@ -130,48 +189,82 @@ void LinkedList::Sort(){
     }
 }
 
-void LinkedList::Insert(int index, int val){
-    Node *p = first, *n = new Node {NULL, val, NULL};
+Node* LinkedList::Search(int value){
+    Node *p = first;
     int length = Length();
-    if (index >= 0 && index <= length) {
-        if (index == 0) {
-            n->next = p;
-            p->prev = n;
-            first = n;
+    for (int i = 0; i < length-1; ++i) {
+        if (*p->point == value){
+            return p;
+        }
+        p = p->next;
+    }
+    return NULL;
+}
+
+void LinkedList::Insert(int index, int *val){
+    Node *p = first, *q = last, *n = new Node {NULL, val, NULL};
+    int length = Length();
+    if (index == 0) {
+        p->point = val;
+        delete n;
+    } else if (index == length){
+        q->next = n;
+        n->prev = q;
+        last = n;
+    } else if (index > 0 && index < length) {
+        for (int i = 0; i < index; ++i) {
+            p = p->next;
+        }
+        p->point = val;
+        if (index == length){
+            p->next = n;
+            n->prev = p;
+            last = n;
         } else {
-            for (int i = 1; i < index; ++i) {
-                p = p->next;
-            }
-            if (index == length){
-                p->next = n;
-                n->prev = p;
-            } else {
-                n->next=p->next;
-                n->prev=p;
-                p->next->prev=n;
-                p->next=n;
-            }
+            n->next=p->next;
+            n->prev=p;
+            p->next->prev=n;
+            p->next=n;
         }
     } else {
         delete n;
     }
 }
 
-void reverse(Node *p, Node *t, Node *first){
-    if (p) {
-        reverse(p, p->next, first);
-        t->next = p->next;
-        t->prev = p->prev;
-        p->next = t->prev;
-        p->prev = t->next;
-    } else {
-        first = t;
-    }
+// void LinkedList::Insert(int index, int *val){
+    // Node *p = first, *n = new Node {NULL, val, NULL};
+    // int length = Length();
+    // if (index >= 0 && index <= length) {
+        // if (index == 0) {
+            // n->next = p;
+            // p->prev = n;
+            // first = n;
+        // } else {
+            // for (int i = 1; i < index; ++i) {
+                // p = p->next;
+            // }
+            // if (index == length){
+                // p->next = n;
+                // n->prev = p;
+                // last = n;
+            // } else {
+                // n->next=p->next;
+                // n->prev=p;
+                // p->next->prev=n;
+                // p->next=n;
+            // }
+        // }
+    // } else {
+        // delete n;
+    // }
+// }
+
+void LinkedList::Push(int *val){
+    Insert(Length(), val);
 }
 
 void LinkedList::Reverse(){
     Node *p = first, *t = new Node{NULL,0,NULL};
-    // reverse(p, t, first);
     int length = Length();
     for (int i = 0; i < length; ++i) {
         t = p->next;
@@ -185,30 +278,35 @@ void LinkedList::Reverse(){
     delete t;
 }
 
-int LinkedList::Delete(int index){
+Node* LinkedList::Delete(int index){
     Node *p = first;
-    int length = Length(), x = 0;
+    int length = Length();
     if (index >= 0 && index <= length) {
         if (index == 0) {
             first=p->next;
             first->prev=NULL;
-            x = p->data;
+            return p;
         } else {
             for (int i = 1; i < index; ++i) {
                 p=p->next;
             }
             if (index == length){
+                last = p->prev;
                 p->prev->next = NULL;
                 p->prev = NULL;
-                x = p->data;
+                return p;
             } else {
                 p=p->next;
                 p->prev->next=p->next;
                 p->next->prev=p->prev;
-                x = p->data;
+                return p;
             }
         }
         delete p;
     }
-    return x;
+    return NULL;
+}
+
+Node* LinkedList::Pop(){
+    return Delete(Length());
 }

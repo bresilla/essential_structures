@@ -1,29 +1,41 @@
 #pragma once
-#include <stdio.h>
+#include <cstdio>
 
 class Node {
     public:
         Node *next;
-        int data;
+        int *point;
         Node *prev;
 };
 
 class LinkedList {
     private:
         Node *first;
+        Node *last;
     public:
         LinkedList();
+        LinkedList(int x);
         LinkedList(int A[], int x);
         ~LinkedList();
 
         void Display();
-        void DisplayAddress();
-        void Insert(int index, int val);
-        void Swap(int index1, int index2);
-        int Delete(int index);
-        int Get(int index);
-        void Set(int index, int val);
-        void Sort();
-        void Reverse();
+        void Address();
+        void Points();
+        void Nodes(Node *one);
+
+        Node Head();
+        Node Tail();
+
         int Length();
+        void Insert(int index, int *val);
+        void Push(int *val);
+        void Append(int A[], int x);
+        void Set(int index, int *val);
+        Node* Get(int index);
+        Node* Delete(int index);
+        Node* Pop();
+        void Swap(Node *one, Node *two);
+        void Reverse();
+        void Sort();
+        Node* Search(int value);
 };
