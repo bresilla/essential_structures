@@ -17,23 +17,21 @@ class LinkedList {
         LinkedList(int x);
         LinkedList(int A[], int x);
         ~LinkedList();
-
         void Display();
-        void Address();
-        void Points();
-        void Nodes(Node *one);
-
-        Node Head();
-        Node Tail();
+        Node* Head();
+        Node* Tail();
 
         int Length();
         void Insert(int index, int *val);
         void Push(int *val);
+        void Top(Node *node);
+        void Bot(Node *node);
         void Append(int A[], int x);
         void Set(int index, int *val);
         Node* Get(int index);
         Node* Delete(int index);
         Node* Pop();
+        void Clean();
         void Swap(Node *one, Node *two);
         void Reverse();
         void Sort();

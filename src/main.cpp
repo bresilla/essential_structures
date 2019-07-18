@@ -2,22 +2,24 @@
 #include <cstdio>
 
 #include "dll.h"
-#include "stack.h"
+#include "stk.h"
+#include "que.h"
 
 int main(){
-    int A[] = {8,6,2,3,1,5,7,12,16,11};
+    int A[] = {18,666,322,342,112,54,7,12,16,11};
     LinkedList list;
-    list.Insert(0, &A[0]);
-    list.Push(&A[0]);
-    list.Push(&A[0]);
-    list.Push(&A[0]);
-    // list.Insert(1, &A[0]);
-    // list.Append(A,10);
-    printf("%d\n", list.Length());
-    // printf("%d\n", *list.Get(0)->point);
-    // printf("%d\n", *list.Get(1)->point);
-    // printf("%d\n", *list.Get(2)->point);
-    // printf("%d\n", *list.Get(3)->point);
-    // list.Display();
-    list.Address();
+    // LinkedList *list = new LinkedList;
+    list.Append(A,10);
+    // list.Push(&A[0]);
+    list.Sort();
+    // list.Pop();
+    // list.Pop();
+    list.Display();
+    Stack stack;
+    stack.push(1);
+    stack.push(2);
+    // stack.push(3);
+    // stack.push(4);
+    stack.display();
+    // printf("%d\n", stack.peak(0));
 }
