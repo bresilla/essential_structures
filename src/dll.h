@@ -1,11 +1,10 @@
 #pragma once
 #include <cstdio>
 
-class Node {
-    public:
-        Node *next;
-        int *point;
-        Node *prev;
+struct Node {
+    Node *next;
+    int *point;
+    Node *prev;
 };
 
 class LinkedList {

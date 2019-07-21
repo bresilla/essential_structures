@@ -11,7 +11,7 @@ int main(){
     // LinkedList *list = new LinkedList;
     list.Append(A,10);
     // list.Push(&A[0]);
-    list.Sort();
+    // list.Sort();
     // list.Pop();
     // list.Pop();
     list.Display();

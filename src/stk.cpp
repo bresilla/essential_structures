@@ -1,6 +1,3 @@
-#include <cstdio>
-#include <cstdlib>
-
 #include "stk.h"
 
 void Stack::getTop(){
@@ -10,7 +7,6 @@ void Stack::getTop(){
         top = NULL;
     }
 }
-
 
 Stack::Stack(): lst(new LinkedList){
     getTop();
