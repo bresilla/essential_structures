@@ -1,14 +1,15 @@
 #pragma once
 #include <cstdio>
+#include <iostream>
 
 #include "dll.h"
 
 class Stack {
     private:
-        LinkedList *lst;
         Node *top;
         void getTop();
     public:
+        LinkedList *lst;
         Stack();
         ~Stack();
 
