@@ -1,8 +1,8 @@
 #include <iostream>
 
-#include "dll.h"
-#include "stk.h"
-#include "que.h"
+#include "essence/dll.h"
+#include "essence/stk.h"
+#include "essence/que.h"
 
 int main(){
     int A[] = {18,666,322,342,112,54,7,12,16,11};

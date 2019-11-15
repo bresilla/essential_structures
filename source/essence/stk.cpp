@@ -1,4 +1,4 @@
-#include "stk.h"
+#include "essence/stk.h"
 
 void Stack::getTop(){
     if (lst->Length() > 0){
